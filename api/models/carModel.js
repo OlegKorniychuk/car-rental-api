@@ -49,4 +49,4 @@ carSchema.virtual('rentPerDay').get(function () {
   return this.rentPerDayBase * coef;
 })
 
-module.exports = mongoose.Model('Car', carSchema);
+module.exports = mongoose.model('Car', carSchema);

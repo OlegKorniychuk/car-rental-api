@@ -52,4 +52,4 @@ const clientSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.Model('Client', clientSchema);
+module.exports = mongoose.model('Client', clientSchema);
