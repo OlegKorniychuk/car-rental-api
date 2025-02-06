@@ -1,5 +1,5 @@
 'use strict';
-const app = require('./app')
+const app = require('./src/app')
 const mongoose = require('mongoose');
 
 const port = process.env.PORT;
