@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "devstart": "node --watch --env-file=.env server.js",
-    "test": "node --env-file=.env.test ./node_modules/mocha/bin/mocha"
+    "test": "node --env-file=.env.test ./node_modules/mocha/bin/mocha --exit"
   },
   "author": "",
   "license": "ISC",
@@ -14,8 +14,8 @@
     "mongoose": "^8.9.6"
   },
   "devDependencies": {
-    "chai": "^5.1.2",
-    "chai-http": "^5.1.1",
+    "chai": "^4.5.0",
+    "chai-http": "^4.4.0",
     "mocha": "^11.1.0"
   }
 }
