@@ -20,3 +20,5 @@ mongoose
 app.listen(port || 3000, () => {
   console.log(`Server up and running at port ${port}`);
 });
+
+module.exports = app;
