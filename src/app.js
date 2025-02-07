@@ -8,7 +8,20 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/api/welcome', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Welcome to the car-rental API!'
+  })
+});
 app.use('/api/cars', carRouter);
 app.use(errorHandler);
+
+app.get('*', (req, res) => {
+  res.status(404).json({
+    status: 'fail',
+    message: 'Page not found'
+  });
+})
 
 module.exports = app;
