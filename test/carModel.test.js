@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const Car = require('../src/models/carModel');
 
 chai.use(chaiHttp);
-const should = chai.should();
 const expect = chai.expect;
 
 const mongoConnection = process.env.MONGO_CONNECTION;
