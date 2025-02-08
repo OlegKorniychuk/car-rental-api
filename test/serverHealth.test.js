@@ -4,7 +4,6 @@ const app = require('../server');
 
 chai.use(chaiHttp);
 
-const expect = chai.expect;
 const should = chai.should();
 
 
