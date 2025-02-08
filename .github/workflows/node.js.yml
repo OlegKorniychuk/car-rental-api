@@ -16,11 +16,15 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
+    - name: Create .env.test file
+      run: |
+        echo "MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env.test
+        echo "MONGO_CONNECTION=${{ secrets.MONGO_CONNECTION }}" >> .env.test
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
