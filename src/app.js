@@ -2,6 +2,7 @@
 const express = require('express');
 const errorHandler = require('./utils/errorHandler');
 const carRouter = require('./routers/carRouter');
+const clientRouter = require('./routers/clientRouter');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.get('/api/welcome', (req, res) => {
   })
 });
 app.use('/api/cars', carRouter);
+app.use('/api/clients', clientRouter);
 app.use(errorHandler);
 
 app.get('*', (req, res) => {

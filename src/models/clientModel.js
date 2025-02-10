@@ -45,6 +45,8 @@ const clientSchema = new mongoose.Schema(
     regularDiscount: {
       type: Number,
       default: 0,
+      min: [0, 'Please, input positive discount'],
+      max: [100, 'Please, input discount that is less then 100']
     },
   },
   {
