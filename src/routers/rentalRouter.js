@@ -6,12 +6,16 @@ const router = express.Router();
 router
   .route('/')
   .get(rentalController.read)
-  .post(rentalController.create);
+  .post(rentalController.checkIds, rentalController.create);
 
 router
   .route('/:id')
   .get(rentalController.readOne)
-  .patch(rentalController.update)
+  .patch(
+    rentalController.protectStartDate, 
+    rentalController.protectIds, 
+    rentalController.update,
+  )
   .delete(rentalController.delete);
 
 router
