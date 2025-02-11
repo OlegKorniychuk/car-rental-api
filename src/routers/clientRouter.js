@@ -1,5 +1,6 @@
 const express = require('express');
 const clientController = require('../controllers/clientController');
+const authController = require('../controllers/authController');
 
 const router = express.Router();
 
@@ -10,8 +11,11 @@ router
 
 router
   .route('/:id')
-  .get(clientController.readOne)
+  .get(authController.protect, clientController.readOne)
   .patch(clientController.update)
-  .delete(clientController.delete);
+  .delete(authController.restrict('manager'), clientController.delete);
+
+router.post('/signup', authController.signUp);
+router.post('/login', authController.login);
 
 module.exports = router;
