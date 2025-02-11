@@ -21,6 +21,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     surename: req.body.surename,
     middleName: req.body.middleName,
     phoneNumber: req.body.phoneNumber,
+    address: req.body.address,
     password: req.body.password
   });
   const token = signJwt(newClient._id)
@@ -35,7 +36,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { phoneNumber, password } = req.body.phoneNumber;
+  const { phoneNumber, password } = req.body;
   if (!phoneNumber || !password) return next(new AppError(400, 'Phone number or password missing'));
 
   const client = await Client.findOne({ phoneNumber: phoneNumber }).select('+password');
@@ -59,11 +60,20 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const verifyToken = promisify(jwt.verify);
   const decodedToken = await verifyToken(token, process.env.JWT_SECRET);
-  
-  const client = await Client.findById(decodedToken._id);
+
+  if (req.params.id !== decodedToken.id) return next(new AppError(403, 'Access denied'));
+  const client = await Client.findById(decodedToken.id);
   if (!client) return next(new AppError(401, 'This user does not exist'));
-  if (req.params.id !== client._id) return next(new AppError(403, 'Access denied'));
-  
+
   req.client = client;
   next();
 });
+
+exports.restrict = 
+  (...roles) => 
+  (req, res, next) => {
+    if (!roles.includes(req.user?.role)) {
+      return next(new AppError(403, 'You do not have permission to perform this action'));
+    };
+    next();
+  }
