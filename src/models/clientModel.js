@@ -74,7 +74,7 @@ clientSchema.methods.checkPassword = async function(
   providedPassword, 
   correctPassword
 ) {
-  return bcrypt.compare(providedPassword, correctPassword);
+  return await bcrypt.compare(providedPassword, correctPassword);
 };
 
 module.exports = mongoose.model('Client', clientSchema);
