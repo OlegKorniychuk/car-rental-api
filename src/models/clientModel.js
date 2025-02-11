@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const clientSchema = new mongoose.Schema(
   {
@@ -41,6 +42,7 @@ const clientSchema = new mongoose.Schema(
         },
         message: 'Please, input a valid phone number that starts with +380'
       },
+      unique: true
     },
     regularDiscount: {
       type: Number,
@@ -48,10 +50,31 @@ const clientSchema = new mongoose.Schema(
       min: [0, 'Please, input positive discount'],
       max: [100, 'Please, input discount that is less then 100']
     },
+    password: {
+      type: String,
+      required: [true, 'Please, input your password'],
+      minLength: [10, 'Your password must be at least 10 characters long'],
+      maxLength: [30, 'Your password can not be longer than 30 characters'],
+      select: false
+    },
   },
   {
     timestamps: true
   }
 );
+
+clientSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+clientSchema.methods.checkPassword = async function(
+  providedPassword, 
+  correctPassword
+) {
+  return bcrypt.compare(providedPassword, correctPassword);
+};
 
 module.exports = mongoose.model('Client', clientSchema);
