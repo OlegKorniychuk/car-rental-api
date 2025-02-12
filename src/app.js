@@ -4,6 +4,7 @@ const errorHandler = require('./utils/errorHandler');
 const carRouter = require('./routers/carRouter');
 const clientRouter = require('./routers/clientRouter');
 const rentalRouter = require('./routers/rentalRouter');
+const authRouter = require('./routers/authRouter');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get('/api/welcome', (req, res) => {
     message: 'Welcome to the car-rental API!'
   })
 });
+app.use('/api', authRouter);
 app.use('/api/cars', carRouter);
 app.use('/api/clients', clientRouter);
 app.use('/api/rentals', rentalRouter);
