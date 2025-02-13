@@ -1,6 +1,6 @@
 'use strict';
 const express = require('express');
-const errorHandler = require('./utils/errorHandler');
+const errorController = require('./controllers/errorController');
 const carRouter = require('./routers/carRouter');
 const clientRouter = require('./routers/clientRouter');
 const rentalRouter = require('./routers/rentalRouter');
@@ -21,7 +21,7 @@ app.use('/api', authRouter);
 app.use('/api/cars', carRouter);
 app.use('/api/clients', clientRouter);
 app.use('/api/rentals', rentalRouter);
-app.use(errorHandler);
+app.use(errorController);
 
 app.get('*', (req, res) => {
   res.status(404).json({

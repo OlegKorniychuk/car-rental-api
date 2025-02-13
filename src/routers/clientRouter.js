@@ -11,7 +11,7 @@ router
 
 router
   .route('/:id')
-  .get(authController.protect, authController.restrict('manager'), clientController.readOne)
+  .get(authController.protect, clientController.readOne)
   .patch(authController.protect, authController.restrict('manager'), clientController.update)
   .delete(authController.protect, authController.restrict('manager'), clientController.delete);
 

@@ -4,6 +4,7 @@ class AppError extends Error {
     this.statusCode =  statusCode;
     this.message = message;
     this.status = statusCode.toString()[0] === '4' ? 'fail' : 'error';
+    this.operational = true;
   }
 }
 
