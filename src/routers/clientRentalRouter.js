@@ -1,25 +1,27 @@
 const express = require('express');
 const rentalController = require('../controllers/rentalController');
+const authController = require('../controllers/authController');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
-  .get(rentalController.read)
-  .post(rentalController.checkIds, rentalController.create);
+  .get(authController.protect, rentalController.read)
+  .post(authController.protect, rentalController.checkIds, rentalController.create);
 
 router
   .route('/:rentalId')
-  .get(rentalController.readOne)
+  .get(authController.protect, rentalController.readOne)
   .patch(
     rentalController.protectStartDate, 
-    rentalController.protectIds, 
+    rentalController.protectIds,
+    authController.protect, 
     rentalController.update,
   )
-  .delete(rentalController.delete);
+  .delete(authController.protect, rentalController.delete);
 
 router
   .route('/:rentalId/details')
-  .get(rentalController.details);
+  .get(authController.protect, rentalController.details);
 
 module.exports = router;
