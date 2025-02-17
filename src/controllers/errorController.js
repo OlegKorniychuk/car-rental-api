@@ -13,7 +13,7 @@ const errorHandlers = {
 
 module.exports = (err, req, res, next) => {
   const errorHandler = errorHandlers[err.name] || (() => err);
-  const error = errorHandler();
+  const error = errorHandler(err);
   if (error.operational) {
     return res.status(error.statusCode).json({
       status: error.status,
