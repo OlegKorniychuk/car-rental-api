@@ -7,9 +7,27 @@ const AppError = require('../utils/appError');
 
 const rentalCrud = makeCrud('rental', Rental);
 
-exports.create = catchAsync(rentalCrud.create);
+exports.create = catchAsync(async (req, res, next) => {
+  req.body.clientId = req.client.id;
+  const newRental = await Rental.create(req.body);
 
-exports.read = catchAsync(rentalCrud.read);
+  res.status(200).json({
+    status: 'success',
+    data: { rental: newRental },
+  });
+});
+
+exports.read = catchAsync(async (req, res, next) => {
+  const results = await Rental.find({ clientId: req.client.id });
+
+  res.status(200).json({
+    status: 'success',
+    results: results.length,
+    data: {
+      rentals: results
+    }
+  });
+});
 
 exports.readOne = catchAsync(rentalCrud.readOne);
 
