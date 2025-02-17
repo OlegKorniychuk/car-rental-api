@@ -14,7 +14,7 @@ const rentalSchema = new mongoose.Schema(
       required: [true, 'Please, provide client Id'],
       immutable: [true, 'The client of an existing rental can not be changed']
     },
-    rentalDate: {
+    rentalStartDate: {
       type: Date,
       required: [true, 'Please, provide rental start date'],
       validate: {
@@ -22,7 +22,7 @@ const rentalSchema = new mongoose.Schema(
         message: 'Rental start date can not be in the past'
       },
     },
-    returnDate: {
+    rentalEndDate: {
       type: Date,
       required: [true, 'Please, provide rental end date'],
       validate: {

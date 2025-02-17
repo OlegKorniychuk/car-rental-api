@@ -59,7 +59,7 @@ exports.protectStartDate = catchAsync(async (req, res, next) => {
 
     if (!rental) return next(new AppError(404, `Rental with id ${id} not found`));
     const currentDate = new Date();
-    const oldStartDate = new Date(rental.rentalDate);
+    const oldStartDate = new Date(rental.rentalStartDate);
     if (oldStartDate < currentDate) return next(new AppError(400, 'Can not change rental start date, it has already started'));
   }
   next();
