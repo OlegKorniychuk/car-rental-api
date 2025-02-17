@@ -12,13 +12,13 @@ router
 router
   .route('/:rentalId')
   .get(authController.protect, rentalController.readOne)
-  .patch(
-    rentalController.protectStartDate, 
-    rentalController.protectIds,
-    authController.protect, 
-    rentalController.update,
-  )
-  .delete(authController.protect, rentalController.delete);
+  // .patch(
+  //   rentalController.protectStartDate, 
+  //   rentalController.protectIds,
+  //   authController.protect, 
+  //   rentalController.update,
+  // )
+  // .delete(authController.protect, rentalController.delete);
 
 router
   .route('/:rentalId/details')
