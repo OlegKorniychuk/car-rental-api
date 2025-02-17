@@ -9,7 +9,7 @@ router
   .post(carController.create);
 
 router
-  .route('/:id')
+  .route('/:carId')
   .get(carController.readOne)
   .patch(carController.update)
   .delete(carController.delete);

@@ -18,7 +18,7 @@ exports.update = catchAsync(rentalCrud.update);
 exports.delete = catchAsync(rentalCrud.delete);
 
 exports.details = catchAsync(async (req, res, next) => {
-  const id = req.params.id;
+  const id = req.params.rentalId;
   const rental = await Rental.findById(id).populate(['clientId', 'carId']);
 
   if (!rental) {

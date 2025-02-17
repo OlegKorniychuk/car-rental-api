@@ -21,7 +21,7 @@ const makeCrud = (objectName, Model) => ({
     })
   },
   readOne: async (req, res, next) => {
-    const id = req.params.id;
+    const id = req.params[`${objectName}Id`];
     const result = await Model.findById(id);
 
     if (!result) {
@@ -36,7 +36,7 @@ const makeCrud = (objectName, Model) => ({
     });
   },
   update: async (req, res, next) => {
-    const id = req.params.id;
+    const id = req.params[`${objectName}Id`];
     const updatedInstance = await Model.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
@@ -54,7 +54,7 @@ const makeCrud = (objectName, Model) => ({
     });
   },
   delete: async (req, res, next) => {
-    const id = req.params.id;
+    const id = req.params[`${objectName}Id`];
     const result = await Model.findByIdAndDelete(id);
   
     if (!result) {

@@ -10,7 +10,7 @@ router
   .post(authController.protect, authController.restrict('manager'), clientController.create);
 
 router
-  .route('/:id')
+  .route('/:clientId')
   .get(authController.protect, clientController.readOne)
   .patch(authController.protect, authController.restrict('manager'), clientController.update)
   .delete(authController.protect, authController.restrict('manager'), clientController.delete);

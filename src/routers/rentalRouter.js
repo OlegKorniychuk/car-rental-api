@@ -9,7 +9,7 @@ router
   .post(rentalController.checkIds, rentalController.create);
 
 router
-  .route('/:id')
+  .route('/:rentalId')
   .get(rentalController.readOne)
   .patch(
     rentalController.protectStartDate, 
@@ -19,7 +19,7 @@ router
   .delete(rentalController.delete);
 
 router
-  .route('/:id/details')
+  .route('/:rentalId/details')
   .get(rentalController.details);
 
 module.exports = router;
