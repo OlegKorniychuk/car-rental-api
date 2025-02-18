@@ -5,13 +5,10 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(carController.read)
-  // .post(carController.create);
+  .get(carController.read);
 
 router
   .route('/:carId')
-  .get(carController.readOne)
-  // .patch(carController.update)
-  // .delete(carController.delete);
+  .get(carController.readOne);
 
 module.exports = router;

@@ -61,7 +61,7 @@ exports.checkIds = catchAsync(async (req, res, next) => {
   if (!car) return next(new AppError(400, 'Car with provided ID does not exist'));
   if (!client) return next(new AppError(400, 'Client with provided ID does not exist'));
   next();
-})
+});
 
 exports.protectIds = catchAsync(async (req, res, next) => {
   const {carId, clientId} = req.body;
@@ -81,4 +81,35 @@ exports.protectStartDate = catchAsync(async (req, res, next) => {
     if (oldStartDate < currentDate) return next(new AppError(400, 'Can not change rental start date, it has already started'));
   }
   next();
-})
+});
+
+exports.calculateRentalCost = catchAsync(async(req, res, next) => {
+  const rentalId = req.params.rentalId;
+  const rental = await Rental.findById(rentalId).populate('carId');
+
+  if (!rental) {
+    return next(new AppError(404, `Rental with id ${rentalId} not found`));
+  }
+
+  const startDate = new Date(rental.rentalStartDate);
+  const currentDate = new Date();
+  const endDate = new Date(rental.rentalEndDate);
+
+  let fullRentDays = 0;
+  let fullFineDays = 0;
+  if (currentDate <= endDate) {
+    fullRentDays = Math.ceil((currentDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
+  } else {
+    fullRentDays = Math.ceil((currentDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
+    fullFineDays = Math.ceil((currentDate.getTime() - endDate.getTime()) / (1000 * 3600 * 24));
+  }
+  const pricePerDay = rental.carId.rentPerDay;
+  const finalRentPrice = fullRentDays * pricePerDay + fullFineDays * pricePerDay * 1.5;
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      finalRentPrice
+    }
+  });
+});

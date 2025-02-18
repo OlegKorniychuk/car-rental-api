@@ -9,16 +9,12 @@ router
   .get(authController.protect, rentalController.read)
   .post(authController.protect, rentalController.checkIds, rentalController.create);
 
+router.route('/:rentalId/calculate-price') 
+  .get(authController.protect, rentalController.calculateRentalCost);
+
 router
   .route('/:rentalId')
-  .get(authController.protect, rentalController.readOne)
-  // .patch(
-  //   rentalController.protectStartDate, 
-  //   rentalController.protectIds,
-  //   authController.protect, 
-  //   rentalController.update,
-  // )
-  // .delete(authController.protect, rentalController.delete);
+  .get(authController.protect, rentalController.readOne);
 
 router
   .route('/:rentalId/details')
