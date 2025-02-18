@@ -23,6 +23,7 @@ const carSchema = new mongoose.Schema(
     rentPerDayBase: {
       type: Number,
       required: [true, 'Please, provide car`s base rent cost per day'],
+      select: false
     },
     productionYear: {
       type: Number,
