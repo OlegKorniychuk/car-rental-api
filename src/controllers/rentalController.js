@@ -89,18 +89,9 @@ exports.protectStartDate = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.calculateRentalCost = catchAsync(async(req, res, next) => {
-  const rentalId = req.params.rentalId;
-  const rental = await Rental.findById(rentalId).populate('carId');
-
-  if (!rental) {
-    return next(new AppError(404, `Rental with id ${rentalId} not found`));
-  }
-
-  const startDate = new Date(rental.rentalStartDate);
+const calculateRentalCost = (startDate, endDate, pricePerDay) => {
+  const FINE_MODIFIER = 1.5;
   const currentDate = new Date();
-  const endDate = new Date(rental.rentalEndDate);
-
   let fullRentDays = 0;
   let fullFineDays = 0;
   if (currentDate <= endDate) {
@@ -109,13 +100,45 @@ exports.calculateRentalCost = catchAsync(async(req, res, next) => {
     fullRentDays = Math.ceil((currentDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
     fullFineDays = Math.ceil((currentDate.getTime() - endDate.getTime()) / (1000 * 3600 * 24));
   }
-  const pricePerDay = rental.carId.rentPerDay;
-  const finalRentPrice = fullRentDays * pricePerDay + fullFineDays * pricePerDay * 1.5;
+
+  const finalRentPrice = fullRentDays * pricePerDay + fullFineDays * pricePerDay * FINE_MODIFIER;
+  return finalRentPrice;
+};
+
+exports.getRentalCost = catchAsync(async(req, res, next) => {
+  const rentalId = req.params.rentalId;
+  const rental = await Rental.findById(rentalId).populate('carId');
+
+  if (!rental) {
+    return next(new AppError(404, `Rental with id ${rentalId} not found`));
+  }
+
+  const finalRentPrice = calculateRentalCost(rental.rentalStartDate, rental.rentalEndDate, rental.carId.rentPerDay);
 
   res.status(200).json({
     status: 'success',
     data: {
       finalRentPrice
     }
+  });
+});
+
+exports.endRental = catchAsync(async (req, res, next) => {
+  const rentalId = req.params.rentalId;
+  const rental = await Rental.findById(rentalId).populate('carId');
+
+  if (!rental) {
+    return next(new AppError(404, `Rental with id ${rentalId} not found`));
+  }
+
+  const finalRentPrice = calculateRentalCost(rental.rentalStartDate, rental.rentalEndDate, rental.carId.rentPerDay);
+  if (req.body.payment !== finalRentPrice) return next(new AppError(400, 'Incorrect payment value'));
+
+  await Rental.findByIdAndUpdate(rentalId, { isOpen: false });
+  await Car.findByIdAndUpdate(rental.carId._id, { isAvailable: true });
+
+  res.status(200).json({
+    status: 'success',
+    data: null
   });
 });

@@ -34,6 +34,10 @@ const rentalSchema = new mongoose.Schema(
         message: 'Minimum rental time is 1 day',
       },
     },
+    isOpen: {
+      type: Boolean,
+      default: true
+    },
   },
   {
     timestamps: true,
