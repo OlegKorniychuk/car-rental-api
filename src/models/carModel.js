@@ -36,6 +36,10 @@ const carSchema = new mongoose.Schema(
         message: 'Production year can not be greater than the current year'
       }
     },
+    isAvailable: {
+      type: Boolean,
+      default: true
+    },
   },
   {
     toJSON: { virtuals: true },

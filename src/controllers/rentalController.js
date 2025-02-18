@@ -9,7 +9,13 @@ const rentalCrud = makeCrud('rental', Rental);
 
 exports.create = catchAsync(async (req, res, next) => {
   req.body.clientId = req.client.id;
+  if (!req.body.carId) return next(new AppError(400, 'Car Id missing'));
+
+  const car = await Car.findById(req.body.carId);
+  if (!car.isAvailable) return next(new AppError(500, 'This car is currently not available'));
+
   const newRental = await Rental.create(req.body);
+  await Car.findByIdAndUpdate(req.body.carId, { isAvailable: false });
 
   res.status(200).json({
     status: 'success',
