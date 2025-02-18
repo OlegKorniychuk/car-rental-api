@@ -1,6 +1,6 @@
 {
   "name": "car-rental-api",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "server.js",
   "scripts": {
     "devstart": "node --watch --env-file=.env server.js",

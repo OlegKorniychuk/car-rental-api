@@ -1,18 +1,14 @@
 const express = require('express');
 const clientController = require('../controllers/clientController');
 const authController = require('../controllers/authController');
+const clientRentalRouter = require('./clientRentalRouter');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .get(authController.protect, authController.restrict('manager'), clientController.read)
-  .post(authController.protect, authController.restrict('manager'), clientController.create);
+router.use('/:clientId/rentals', clientRentalRouter);
 
 router
-  .route('/:id')
-  .get(authController.protect, clientController.readOne)
-  .patch(authController.protect, authController.restrict('manager'), clientController.update)
-  .delete(authController.protect, authController.restrict('manager'), clientController.delete);
+  .route('/:clientId')
+  .get(authController.protect, clientController.readOne);
 
 module.exports = router;

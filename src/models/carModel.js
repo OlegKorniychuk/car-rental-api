@@ -22,7 +22,7 @@ const carSchema = new mongoose.Schema(
     },
     rentPerDayBase: {
       type: Number,
-      required: [true, 'Please, provide car`s base rent cost per day'],
+      required: [true, 'Please, provide car`s base rent cost per day']
     },
     productionYear: {
       type: Number,
@@ -34,6 +34,10 @@ const carSchema = new mongoose.Schema(
         },
         message: 'Production year can not be greater than the current year'
       }
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true
     },
   },
   {

@@ -97,7 +97,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const decodedToken = await verifyToken(token, process.env.JWT_SECRET);
 
-  if (req.params.id !== decodedToken.sub) return next(new AppError(403, 'Access denied'));
+  if (req.params.clientId !== decodedToken.sub) return next(new AppError(403, 'Access denied'));
   const client = await Client.findById(decodedToken.sub);
   if (!client) return next(new AppError(401, 'This user does not exist'));
 
