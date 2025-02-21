@@ -47,9 +47,9 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!phoneNumber || !password) return next(new AppError(400, 'Phone number or password missing'));
 
   const client = await Client.findOne({ phoneNumber: phoneNumber }).select('+password');
-  const passwordCorrect = client?.checkPassword(password, client?.password);
+  const passwordCorrect = await client?.checkPassword(password, client?.password);
 
-  if (!(client && passwordCorrect)) return next(new AppError(401, 'Incorrect phone number or password'));
+  if (!client || !passwordCorrect) return next(new AppError(401, 'Incorrect phone number or password'));
 
   const accessToken = createAccessToken(client._id);
   const refreshToken = createRefreshToken(client._id);
