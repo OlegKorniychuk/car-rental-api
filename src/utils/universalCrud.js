@@ -10,7 +10,7 @@ const makeCrud = (objectName, Model) => ({
     });
   },
   read: async (req, res, next) => {
-    const results = await Model.find();
+    const results = await Model.find().select('-__v');
 
     res.status(200).json({
       status: 'success',
@@ -22,7 +22,7 @@ const makeCrud = (objectName, Model) => ({
   },
   readOne: async (req, res, next) => {
     const id = req.params[`${objectName}Id`];
-    const result = await Model.findById(id);
+    const result = await Model.findById(id).select('-__v');
 
     if (!result) {
       return next(new AppError(404, `${objectName} with id ${id} not found`));

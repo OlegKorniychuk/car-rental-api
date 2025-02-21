@@ -27,7 +27,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
   const newClient = await Client.create({
     firstName: req.body.firstName,
-    surename: req.body.surename,
+    surname: req.body.surname,
     middleName: req.body.middleName,
     phoneNumber: req.body.phoneNumber,
     address: req.body.address,
@@ -49,7 +49,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const client = await Client.findOne({ phoneNumber: phoneNumber }).select('+password');
   const passwordCorrect = client?.checkPassword(password, client?.password);
 
-  if (!client || !passwordCorrect) return next(401, 'Incorrect phone number or password');
+  if (!(client && passwordCorrect)) return next(new AppError(401, 'Incorrect phone number or password'));
 
   const accessToken = createAccessToken(client._id);
   const refreshToken = createRefreshToken(client._id);
