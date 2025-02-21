@@ -77,7 +77,7 @@ exports.protectIds = catchAsync(async (req, res, next) => {
 
 // Prevents from changing rental start date if it has already started
 exports.protectStartDate = catchAsync(async (req, res, next) => {
-  if (startDate) {
+  if (req.body.startDate) {
     const id = req.params.id;
     const rental = await Rental.findById(id);
 
