@@ -10,12 +10,12 @@ const clientSchema = new mongoose.Schema(
       minLength: [2, 'First name must be at least 2 characters long'],
       maxLength: [20, 'First name can not be longer than 20 characters'],
     },
-    surename: {
+    surname: {
       type: String,
-      required: [true, 'Please, provide client`s surename'],
+      required: [true, 'Please, provide client`s surname'],
       trim: true,
-      minLength: [2, 'Surename must be at least 2 characters long'],
-      maxLength: [20, 'Surename can not be longer than 20 characters'],
+      minLength: [2, 'Surname must be at least 2 characters long'],
+      maxLength: [20, 'Surname can not be longer than 20 characters'],
     },
     middleName: {
       type: String,

@@ -27,7 +27,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
   const newClient = await Client.create({
     firstName: req.body.firstName,
-    surename: req.body.surename,
+    surname: req.body.surname,
     middleName: req.body.middleName,
     phoneNumber: req.body.phoneNumber,
     address: req.body.address,
