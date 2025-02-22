@@ -54,10 +54,12 @@ exports.login = catchAsync(async (req, res, next) => {
   const accessToken = createAccessToken(client._id);
   const refreshToken = createRefreshToken(client._id);
   await RefreshToken.create({ token: refreshToken });
+  delete client.password;
   res.status(201).json({
     status: 'success',
     accessToken,
-    refreshToken
+    refreshToken,
+    data: { client }
   });
 });
 
@@ -97,7 +99,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const decodedToken = await verifyToken(token, process.env.JWT_SECRET);
 
-  if (req.params.clientId !== decodedToken.sub) return next(new AppError(403, 'Access denied'));
   const client = await Client.findById(decodedToken.sub);
   if (!client) return next(new AppError(401, 'This user does not exist'));
 

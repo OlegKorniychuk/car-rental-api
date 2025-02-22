@@ -35,7 +35,17 @@ exports.read = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.readOne = catchAsync(rentalCrud.readOne);
+exports.readOne = catchAsync(async (req, res, next) => { 
+  const rental = await Rental.findById(req.params.rentalId);
+  if (rental.clientId.toString() !== req.client.id) return next(new AppError(403, 'Access denied'));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      rental
+    }
+  });
+});
 
 exports.update = catchAsync(rentalCrud.update);
 
