@@ -1,5 +1,6 @@
 'use strict';
 const express = require('express');
+const cors = require('cors');
 const errorController = require('./controllers/errorController');
 const carRouter = require('./routers/carRouter');
 const clientRouter = require('./routers/clientRouter');
@@ -9,6 +10,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.get('/api/welcome', (req, res) => {
   res.status(200).json({
