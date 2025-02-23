@@ -46,7 +46,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const { phoneNumber, password } = req.body;
   if (!phoneNumber || !password) return next(new AppError(400, 'Phone number or password missing'));
 
-  const client = await Client.findOne({ phoneNumber: phoneNumber }).select('+password');
+  const client = await Client.findOne({ phoneNumber: phoneNumber }).select('+password -__v');
   const passwordCorrect = await client?.checkPassword(password, client?.password);
 
   if (!client || !passwordCorrect) return next(new AppError(401, 'Incorrect phone number or password'));
@@ -54,12 +54,13 @@ exports.login = catchAsync(async (req, res, next) => {
   const accessToken = createAccessToken(client._id);
   const refreshToken = createRefreshToken(client._id);
   await RefreshToken.create({ token: refreshToken });
-  delete client.password;
+  const clientData = client.toObject();
+  delete clientData.password;
   res.status(201).json({
     status: 'success',
     accessToken,
     refreshToken,
-    data: { client }
+    data: { client: clientData }
   });
 });
 
