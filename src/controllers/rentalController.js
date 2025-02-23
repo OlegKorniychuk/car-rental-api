@@ -24,7 +24,7 @@ exports.create = catchAsync(async (req, res, next) => {
 });
 
 exports.read = catchAsync(async (req, res, next) => {
-  const results = await Rental.find({ clientId: req.client.id });
+  const results = await Rental.find({ clientId: req.client.id }).populate('carId');
 
   res.status(200).json({
     status: 'success',
