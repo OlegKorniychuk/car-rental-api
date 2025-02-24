@@ -7,6 +7,6 @@ router
   .post('/signup', authController.signUp)
   .post('/login', authController.login)
   .post('/refresh', authController.refresh)
-  .delete('/logout', authController.logout);
+  .post('/logout', authController.logout);
 
 module.exports = router;
