@@ -46,18 +46,21 @@ exports.login = catchAsync(async (req, res, next) => {
   const { phoneNumber, password } = req.body;
   if (!phoneNumber || !password) return next(new AppError(400, 'Phone number or password missing'));
 
-  const client = await Client.findOne({ phoneNumber: phoneNumber }).select('+password');
-  const passwordCorrect = client?.checkPassword(password, client?.password);
+  const client = await Client.findOne({ phoneNumber: phoneNumber }).select('+password -__v');
+  const passwordCorrect = await client?.checkPassword(password, client?.password);
 
-  if (!(client && passwordCorrect)) return next(new AppError(401, 'Incorrect phone number or password'));
+  if (!client || !passwordCorrect) return next(new AppError(401, 'Incorrect phone number or password'));
 
   const accessToken = createAccessToken(client._id);
   const refreshToken = createRefreshToken(client._id);
   await RefreshToken.create({ token: refreshToken });
+  const clientData = client.toObject();
+  delete clientData.password;
   res.status(201).json({
     status: 'success',
     accessToken,
-    refreshToken
+    refreshToken,
+    data: { client: clientData }
   });
 });
 
@@ -97,7 +100,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const decodedToken = await verifyToken(token, process.env.JWT_SECRET);
 
-  if (req.params.clientId !== decodedToken.sub) return next(new AppError(403, 'Access denied'));
   const client = await Client.findById(decodedToken.sub);
   if (!client) return next(new AppError(401, 'This user does not exist'));
 

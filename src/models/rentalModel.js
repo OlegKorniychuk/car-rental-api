@@ -18,9 +18,10 @@ const rentalSchema = new mongoose.Schema(
       type: Date,
       required: [true, 'Please, provide rental start date'],
       validate: {
-        validator: function(value) { return value >= new Date(); },
+        validator: function(value) { return (new Date(value)).getDate() >= (new Date()).getDate(); },
         message: 'Rental start date can not be in the past'
       },
+      default: new Date(),
     },
     rentalEndDate: {
       type: Date,
@@ -40,7 +41,13 @@ const rentalSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true,
+    toJSON: { virtuals: true, transform(doc, ret) {
+      delete ret.__v;
+      delete ret._id;
+      return ret;
+    } },
+    toObject: { virtuals: true },
+    timestamps: true
   }
 );
 

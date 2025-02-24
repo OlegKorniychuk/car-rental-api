@@ -24,7 +24,7 @@ exports.create = catchAsync(async (req, res, next) => {
 });
 
 exports.read = catchAsync(async (req, res, next) => {
-  const results = await Rental.find({ clientId: req.client.id });
+  const results = await Rental.find({ clientId: req.client.id }).populate('carId');
 
   res.status(200).json({
     status: 'success',
@@ -35,7 +35,17 @@ exports.read = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.readOne = catchAsync(rentalCrud.readOne);
+exports.readOne = catchAsync(async (req, res, next) => { 
+  const rental = await Rental.findById(req.params.rentalId);
+  if (rental.clientId.toString() !== req.client.id) return next(new AppError(403, 'Access denied'));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      rental
+    }
+  });
+});
 
 exports.update = catchAsync(rentalCrud.update);
 
@@ -82,8 +92,8 @@ exports.protectStartDate = catchAsync(async (req, res, next) => {
     const rental = await Rental.findById(id);
 
     if (!rental) return next(new AppError(404, `Rental with id ${id} not found`));
-    const currentDate = new Date();
-    const oldStartDate = new Date(rental.rentalStartDate);
+    const currentDate = (new Date()).getDate();
+    const oldStartDate = (new Date(rental.rentalStartDate)).getDate();
     if (oldStartDate < currentDate) return next(new AppError(400, 'Can not change rental start date, it has already started'));
   }
   next();
